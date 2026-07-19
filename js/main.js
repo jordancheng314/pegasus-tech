@@ -23,6 +23,34 @@
     });
   }
 
+  const lightbox = document.querySelector("[data-lightbox]");
+  const lightboxImg = document.querySelector("[data-lightbox-img]");
+  const lightboxClose = document.querySelector("[data-lightbox-close]");
+  const galleryItems = document.querySelectorAll("[data-lightbox-gallery] .gallery-item");
+
+  const closeLightbox = () => {
+    if (!lightbox) return;
+    lightbox.hidden = true;
+    if (lightboxImg) lightboxImg.src = "";
+  };
+
+  galleryItems.forEach((item) => {
+    item.addEventListener("click", () => {
+      if (!lightbox || !lightboxImg) return;
+      lightboxImg.src = item.dataset.full || item.querySelector("img")?.src || "";
+      lightboxImg.alt = item.querySelector("img")?.alt || "";
+      lightbox.hidden = false;
+    });
+  });
+
+  lightboxClose?.addEventListener("click", closeLightbox);
+  lightbox?.addEventListener("click", (event) => {
+    if (event.target === lightbox) closeLightbox();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeLightbox();
+  });
+
   const carousel = document.querySelector("[data-carousel]");
   if (!carousel) return;
 
@@ -30,7 +58,6 @@
   const dotsWrap = carousel.querySelector("[data-dots]");
   const prevBtn = carousel.querySelector("[data-prev]");
   const nextBtn = carousel.querySelector("[data-next]");
-  const progress = carousel.querySelector("[data-progress]");
   const progressBar = carousel.querySelector(".carousel-progress");
 
   if (!slides.length) return;
@@ -54,7 +81,7 @@
   };
 
   const restartProgress = () => {
-    if (!progress || !progressBar || reduceMotion) return;
+    if (!progressBar || reduceMotion) return;
     progressBar.classList.remove("is-running");
     void progressBar.offsetWidth;
     progressBar.classList.add("is-running");
