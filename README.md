@@ -1,2 +1,0 @@
-# pegasus-tech
-pegasus-website
